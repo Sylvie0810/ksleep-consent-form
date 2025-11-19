@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>케이슬립케어 개인정보 이용 동의서</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .intro {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .intro p {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .section-content {
+            font-size: 14px;
+            color: #4a5568;
+            padding-left: 10px;
+        }
+
+        .section-content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .section-content li {
+            margin: 8px 0;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .highlight-box strong {
+            color: #856404;
+        }
+
+        .consent-box {
+            background: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .consent-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .radio-group {
+            margin: 15px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .radio-option.agree {
+            border-color: #667eea;
+        }
+
+        .radio-option.disagree {
+            border-color: #e53e3e;
+        }
+
+        input[type="radio"]:checked + label {
+            font-weight: bold;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .signature-section.active {
+            display: block;
+        }
+
+        .signature-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .signature-canvas-wrapper {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        #signatureCanvas {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            cursor: crosshair;
+            display: block;
+            touch-action: none;
+        }
+
+        .signature-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .signature-info input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .signature-info input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-clear:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .guardian-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .guardian-section.active {
+            display: block;
+        }
+
+        .guardian-section h4 {
+            color: #0050b3;
+            margin-bottom: 15px;
+        }
+
+        .guardian-info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .guardian-info input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 1px solid #91d5ff;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            margin-bottom: 30px;
+            color: #4a5568;
+        }
+
+        .modal-content button {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .signature-info,
+            .guardian-info {
+                flex-direction: column;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>개인정보 및 민감정보 수집·이용 동의서</h1>
+            <p>케이슬립케어 (수미헬스)</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p><strong>케이슬립케어(운영사: 수미헬스)</strong>는 「개인정보 보호법」 제15조(개인정보의 수집·이용) 및 제23조(민감정보의 처리 제한)에 따라, 수면무호흡증 통합 케어 프로그램 제공을 위해 아래와 같이 귀하의 개인정보 및 건강 관련 민감정보 수집·이용에 대한 동의를 받고 있습니다. 본 동의서는 법령에 따른 필수 절차로, 귀하의 개인정보 자기결정권 보장 및 적법한 정보 처리를 위해 작성되었습니다.</p>
+            </div>
+
+            <div class="section">
+                <div class="section-title">1. 수집·이용 목적</div>
+                <div class="section-content">
+                    <strong>수면무호흡증 진단 및 치료 지원</strong>
+                    <ul>
+                        <li>PSG(수면다원검사) 결과 확인 및 해석 지원</li>
+                        <li>양압기 및 기타 치료(예: 구강장치 등) 계획 수립 및 조정</li>
+                        <li>Mask fit(마스크 적합도) 평가 및 마스크 선택·교체 지원</li>
+                        <li>양압기 titration(압력 설정) 데이터 확인 및 최적 압력 조정 지원</li>
+                        <li>양압기 및 기타 치료기기 사용 현황 모니터링 및 순응도 관리(알림, 코칭 등)</li>
+                    </ul>
+
+                    <strong>맞춤형 케어·교육 제공</strong>
+                    <ul>
+                        <li>검사·치료 데이터를 기반으로 한 맞춤형 설명·리포트 제공</li>
+                        <li>수면·수면무호흡증·치료·보험 관련 안내 및 Q&A 지원(SOOMi Chatbot 포함)</li>
+                    </ul>
+
+                    <strong>서비스 품질관리 및 개선</strong>
+                    <ul>
+                        <li>치료 순응도 및 증상 개선 데이터 분석</li>
+                        <li>내부 통계·분석을 통한 프로그램·서비스 개선</li>
+                    </ul>
+
+                    <strong>고객 지원 및 문의 응대</strong>
+                    <ul>
+                        <li>서비스 관련 문의 및 불편사항 처리</li>
+                        <li>본인 확인 및 상담 지원</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. 수집·이용 항목</div>
+                <div class="section-content">
+                    <strong>[1] 일반 개인정보</strong>
+                    <ul>
+                        <li>성명, 생년월일, 성별</li>
+                        <li>연락처(휴대전화 번호, 이메일)</li>
+                        <li>병원 고객번호 등 프로그램 운영에 필요한 식별 정보</li>
+                    </ul>
+
+                    <strong>[2] 건강 관련 민감정보</strong>
+                    <ul>
+                        <li>PSG(수면다원검사) 결과 전반 (AHI(수면무호흡저호흡지수), 산소포화도, 수면 단계, 체위 변화, PLM(사지 움직임) 등)</li>
+                        <li>양압기 및 관련 검사/설정 데이터 (양압기 titration 결과, Mask fit 평가, 사용 마스크 종류·사이즈, 압력 기록, 누출, 잔여 AHI(수면무호흡저호흡지수) 등)</li>
+                        <li>실제 양압기 사용 데이터 (사용 시간, 사용 일수, 순응도 여부, 불편감·부작용에 대한 보고 등)</li>
+                        <li>수면 관련 설문 및 기록 (STOP-BANG(수면무호흡증 위험도 평가), Epworth 졸림척도, 수면습관, 동반질환, 복용약 등 고객이 직접 입력하고 제출한 정보에 한함)</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>※ 안내:</strong> 실제 수집 항목은 진료기관·사용 장비 및 프로그램 구성에 따라 일부 달라질 수 있으며, 그 경우 별도 안내 후 최소한의 범위 내에서 수집·이용합니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">3. 보유·이용 기간</div>
+                <div class="section-content">
+                    <ul>
+                        <li>케이슬립케어(운영사: 수미헬스) 프로그램 참여 기간 동안 및 참여 종료 후 <strong>5년간</strong> 보관 (참고: 의료법상 진료기록 보관 - 10년)</li>
+                        <li>관련 법령(예: 의료 관련 법령, 개인정보 보호법 등)에 따라 더 긴 기간 보존이 필요한 경우, 해당 법령에서 정한 기간 동안 보관·이용할 수 있습니다.</li>
+                        <li>통계·연구 목적으로 활용하는 경우, 개인을 직접 식별할 수 없도록 완전히 익명 처리한 후에만 활용하며, 이 경우에도 귀하는 언제든지 삭제를 요청할 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">4. 제3자 제공</div>
+                <div class="section-content">
+                    <strong>1) 진료 및 프로그램 운영을 위한 제공</strong>
+                    <ul>
+                        <li><strong>제공 대상:</strong> 고객이 검사·진료를 받은 수면클리닉 또는 병원, 치료기기 및 소모품 공급사(DME) 등</li>
+                        <li><strong>제공 목적:</strong> 진단·치료·검사 및 프로그램 운영, 장비 세팅·유지관리, 기술 지원 등</li>
+                        <li><strong>제공 항목:</strong> 위 2조에서 명시한 정보 중, 업무 수행에 필요한 최소한의 범위</li>
+                        <li><strong>보유·이용 기간:</strong> 상기 3조의 보유 기간 또는 관련 법령에서 정한 기간</li>
+                    </ul>
+
+                    <strong>2) 법령에 따른 제공</strong>
+                    <ul>
+                        <li>법률에 특별한 규정이 있는 경우</li>
+                        <li>수사기관·감독기관·법원 등의 적법한 요청이 있는 경우 등</li>
+                        <li>이 경우에는 관련 법령에 따라 별도 동의 없이 제공될 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">5. 정보주체의 권리</div>
+                <div class="section-content">
+                    <p>귀하는 언제든지 본인에 관한 다음 사항에 대해 수미헬스(SOOMi Health, 이메일: contact@ksleep.care / 전화: 010-9796-2513)에 요구할 수 있습니다:</p>
+                    <ul>
+                        <li>개인정보 및 민감정보 열람</li>
+                        <li>정정·삭제 요청</li>
+                        <li>처리 정지 요청(법령상 제한이 있는 경우 제외)</li>
+                    </ul>
+                    <p style="margin-top: 10px;">위 권리를 행사하고자 할 때에는 수미헬스(SOOMi Health)의 개인정보 보호책임자 또는 고객지원 채널을 통해 요청하실 수 있으며, 수미헬스(SOOMi Health)는 관련 법령에서 정한 절차와 기한 내에 성실히 답변·조치합니다.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">6. 카카오톡 채널을 통한 정보 수신 동의 (선택)</div>
+                <div class="section-content">
+                    <p style="margin-bottom: 15px;">케이슬립케어(운영사: 수미헬스) 카카오톡 채널을 통해 다음과 같은 정보를 수신하는 것에 동의하십니까?</p>
+                    <ul style="margin-bottom: 15px;">
+                        <li>검사 결과, 치료 진행 상황, 순응도 리포트 등 프로그램 관련 안내</li>
+                        <li>양압기 사용법, 관리 방법, 문제 해결 등 교육 자료</li>
+                        <li>예약 안내, 프로그램 일정, 중요 공지사항</li>
+                        <li>수면·수면무호흡증·치료·보험 관련 Q&A 및 상담 지원</li>
+                    </ul>
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="kakaoConsent" style="width: 18px; height: 18px; margin-right: 10px; cursor: pointer;">
+                            <span style="font-size: 15px; font-weight: 500;">케이슬립케어(운영사: 수미헬스) 카카오톡 채널을 통한 정보 수신에 동의합니다 (선택)</span>
+                        </label>
+                        <p style="margin-top: 10px; font-size: 13px; color: #6c757d;">
+                            ※ 동의하지 않더라도 케이슬립케어(운영사: 수미헬스) 프로그램 이용에는 제한이 없습니다.<br>
+                            ※ 프로그램 종료 시 카카오톡 채널을 통한 정보 수신도 자동으로 종료됩니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">7. 동의 거부 권리 및 불이익 안내</div>
+                <div class="section-content">
+                    <ul>
+                        <li>귀하는 위 개인정보 및 민감정보 수집·이용에 대한 동의를 거부할 권리가 있습니다.</li>
+                        <li>다만, 동의를 거부하실 경우:
+                            <ul>
+                                <li>케이슬립케어(운영사: 수미헬스) 프로그램의 일부 또는 전체 이용이 제한될 수 있으며,</li>
+                                <li>검사·치료 데이터 기반 맞춤형 케어 및 순응도 관리 서비스 제공이 어려울 수 있습니다.</li>
+                            </ul>
+                        </li>
+                        <li>병원에서 제공하는 기본 진료·검사 자체는 해당 의료기관의 정책 및 동의서에 따르며, 본 동의 여부와는 별도로 운영될 수 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">8. 만 14세 미만 아동의 경우</div>
+                <div class="section-content">
+                    <ul>
+                        <li>만 14세 미만 아동이 케이슬립케어(운영사: 수미헬스) 프로그램에 참여하는 경우, 반드시 법정대리인(부모 등)의 동의가 필요합니다.</li>
+                        <li>아래에서 법정대리인의 성명 및 연락처를 추가로 입력해 주세요.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="consent-box">
+                <div class="consent-title">9. 동의 여부 선택</div>
+                <p style="text-align: center; margin-bottom: 20px; color: #4a5568;">위 내용을 모두 확인하였으며, 개인정보 및 민감정보 수집·이용에</p>
+
+                <div class="radio-group">
+                    <div class="radio-option disagree">
+                        <input type="radio" id="disagree" name="consent" value="disagree">
+                        <label for="disagree">동의하지 않습니다</label>
+                    </div>
+                    <div class="radio-option agree">
+                        <input type="radio" id="agree" name="consent" value="agree">
+                        <label for="agree">동의합니다 (필수)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="signature-section" id="signatureSection">
+                <div class="signature-label">고객 정보</div>
+                <div class="signature-info">
+                    <input type="text" id="patientName" placeholder="고객 성명" required>
+                    <input type="number" id="patientBirth" placeholder="고객 생년 (예: 1990)" min="1900" max="2025" required>
+                </div>
+
+                <div class="guardian-section" id="guardianSection">
+                    <h4>법정대리인 정보 (만 14세 미만인 경우)</h4>
+                    <div class="guardian-info">
+                        <input type="text" id="guardianName" placeholder="법정대리인 성명">
+                        <input type="tel" id="guardianPhone" placeholder="법정대리인 연락처">
+                        <input type="text" id="guardianRelation" placeholder="관계 (예: 부, 모)">
+                    </div>
+                </div>
+
+                <div class="signature-label" style="margin-top: 25px;">서명</div>
+                <p style="font-size: 13px; color: #718096; margin-bottom: 10px;">아래 박스 안에 마우스나 터치로 서명해 주세요.</p>
+                <div class="signature-canvas-wrapper">
+                    <canvas id="signatureCanvas" width="740" height="200"></canvas>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-clear" onclick="clearSignature()">서명 지우기</button>
+                    <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()" disabled>동의하고 제출하기</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>수미헬스(SOOMi Health)</strong> | 서비스명: 케이슬립케어</p>
+            <p>사업자등록번호: 889-43-01165 | 대표자명·개인정보보호책임자: 김연재</p>
+            <p>주소: 서울특별시 영등포구 양평로 24, 5층 (Korea)</p>
+            <p>이메일: contact@ksleep.care | 전화: 010-9796-2513</p>
+            <p style="margin-top: 15px; font-size: 12px; color: #999;">Copyright© 2025 수미헬스 All rights reserved</p>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2>✓ 동의가 완료되었습니다</h2>
+            <p>개인정보 수집·이용 동의서가 성공적으로 제출되었습니다.</p>
+            <div id="receiptInfo" style="background: #f8f9fa; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: left;">
+                <p style="font-size: 14px; color: #495057; margin-bottom: 10px;">
+                    <strong>제출 정보</strong>
+                </p>
+                <p style="font-size: 13px; color: #6c757d; margin: 5px 0;">
+                    • 제출 ID: <span id="receiptId"></span>
+                </p>
+                <p style="font-size: 13px; color: #6c757d; margin: 5px 0;">
+                    • 제출 시각: <span id="receiptTime"></span>
+                </p>
+                <p style="font-size: 13px; color: #6c757d; margin: 5px 0;">
+                    • 증빙 코드: <span id="receiptHash" style="font-family: monospace; font-size: 11px;"></span>
+                </p>
+            </div>
+            <p style="font-size: 13px; color: #6c757d; margin-bottom: 15px;">
+                ※ 제출이 완료되었습니다. 감사합니다.
+            </p>
+            <button class="btn-submit" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const signatureSection = document.getElementById('signatureSection');
+        const submitBtn = document.getElementById('submitBtn');
+        const guardianSection = document.getElementById('guardianSection');
+
+        let isDrawing = false;
+        let hasSignature = false;
+        let submittedData = null;  // 제출된 데이터 저장
+
+        // 동의 여부 선택 시
+        document.querySelectorAll('input[name="consent"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'agree') {
+                    signatureSection.classList.add('active');
+                } else {
+                    signatureSection.classList.remove('active');
+                    alert('동의하지 않으시면 케이슬립케어(운영사: 수미헬스) 프로그램 이용이 제한됩니다.');
+                }
+            });
+        });
+
+        // 생년 입력 시 만 14세 미만 체크
+        document.getElementById('patientBirth').addEventListener('input', function() {
+            const birthYear = parseInt(this.value);
+            const currentYear = new Date().getFullYear();
+            const age = currentYear - birthYear;
+
+            if (age < 14) {
+                guardianSection.classList.add('active');
+            } else {
+                guardianSection.classList.remove('active');
+            }
+        });
+
+        // Canvas 서명 기능
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            hasSignature = true;
+            validateForm();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+            validateForm();
+        }
+
+        function validateForm() {
+            const name = document.getElementById('patientName').value.trim();
+            const birth = document.getElementById('patientBirth').value;
+            const agreed = document.querySelector('input[name="consent"]:checked')?.value === 'agree';
+
+            if (agreed && name && birth && hasSignature) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        document.getElementById('patientName').addEventListener('input', validateForm);
+        document.getElementById('patientBirth').addEventListener('change', validateForm);
+
+        function submitForm() {
+            const name = document.getElementById('patientName').value;
+            const birthYear = document.getElementById('patientBirth').value;
+            const guardianName = document.getElementById('guardianName').value;
+            const guardianPhone = document.getElementById('guardianPhone').value;
+            const guardianRelation = document.getElementById('guardianRelation').value;
+            const kakaoConsent = document.getElementById('kakaoConsent').checked;
+
+            // 만 14세 미만인 경우 법정대리인 정보 필수
+            const currentYear = new Date().getFullYear();
+            const age = currentYear - parseInt(birthYear);
+
+            if (age < 14 && (!guardianName || !guardianPhone)) {
+                alert('만 14세 미만인 경우 법정대리인 정보를 입력해주세요.');
+                return;
+            }
+
+            // 서명 이미지 데이터
+            const signatureData = canvas.toDataURL();
+
+            // 전체 동의서 HTML 생성 (DB 저장용)
+            const fullConsentHTML = generateFullConsentHTML(name, birthYear, guardianName, guardianPhone, guardianRelation, kakaoConsent, signatureData);
+
+            // 제출 버튼 비활성화
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '제출 중...';
+
+            // 서버로 전송
+            fetch('https://ksleep-consent-backend.vercel.app/api/consent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    birth: birthYear,
+                    guardianName: guardianName || null,
+                    guardianPhone: guardianPhone || null,
+                    guardianRelation: guardianRelation || null,
+                    kakaoChannelAgreed: kakaoConsent,
+                    signatureData,
+                    fullConsentHTML: fullConsentHTML,  // 전체 동의서 HTML 추가
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('제출 성공:', data);
+
+                    // 영수증 정보 저장
+                    submittedData = {
+                        id: data.data.id,
+                        name: name,
+                        birthYear: birthYear,
+                        submittedAt: data.data.submittedAt,
+                        evidenceHash: data.data.evidenceHash,
+                        signatureData: signatureData,
+                        guardianName: guardianName || null,
+                        guardianPhone: guardianPhone || null,
+                        kakaoConsent: kakaoConsent
+                    };
+
+                    // localStorage에 저장 (병원 확인서에서 사용)
+                    localStorage.setItem('lastConsentSubmission', JSON.stringify(submittedData));
+
+                    // 영수증 정보 표시
+                    document.getElementById('receiptId').textContent = data.data.id;
+                    document.getElementById('receiptTime').textContent = new Date(data.data.submittedAt).toLocaleString('ko-KR');
+                    document.getElementById('receiptHash').textContent = data.data.evidenceHash ? data.data.evidenceHash.substring(0, 32) + '...' : '';
+
+                    document.getElementById('successModal').style.display = 'block';
+                } else {
+                    alert('제출 실패: ' + data.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '동의하고 제출하기';
+                }
+            })
+            .catch(error => {
+                console.error('제출 오류:', error);
+                alert('서버 연결 오류가 발생했습니다. 네트워크를 확인하고 다시 시도해주세요.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '동의하고 제출하기';
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+            // 폼 초기화 또는 다음 페이지로 이동
+            window.location.reload();
+        }
+
+        function downloadReceipt() {
+            if (!submittedData) {
+                alert('제출 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // HTML 영수증 생성
+            const receiptHTML = `
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 수집·이용 동의서 제출 확인서</title>
+    <style>
+        body { font-family: "Malgun Gothic", sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { color: #667eea; font-size: 28px; margin-bottom: 10px; }
+        .header p { color: #6c757d; font-size: 14px; }
+        .section { margin: 25px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+        .section h2 { font-size: 18px; color: #2d3748; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        .info-grid { display: grid; grid-template-columns: 150px 1fr; gap: 12px; margin-top: 15px; }
+        .info-label { font-weight: bold; color: #495057; }
+        .info-value { color: #2d3748; }
+        .signature { text-align: center; margin: 20px 0; padding: 20px; background: white; border: 2px solid #e2e8f0; border-radius: 8px; }
+        .signature img { max-width: 400px; border: 1px solid #cbd5e0; padding: 10px; background: white; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; color: #6c757d; font-size: 12px; }
+        .evidence { background: #fff3cd; padding: 15px; border: 1px solid #ffc107; border-radius: 6px; margin: 20px 0; }
+        .evidence p { margin: 5px 0; font-size: 13px; color: #856404; }
+        .evidence code { font-family: monospace; background: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>개인정보 수집·이용 동의서 제출 확인서</h1>
+        <p>케이슬립케어 (수미헬스)</p>
+    </div>
+
+    <div class="section">
+        <h2>동의자 정보</h2>
+        <div class="info-grid">
+            <div class="info-label">성명</div>
+            <div class="info-value">${submittedData.name}</div>
+            <div class="info-label">생년</div>
+            <div class="info-value">${submittedData.birthYear}년</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>동의 정보</h2>
+        <div class="info-grid">
+            <div class="info-label">동의 내용</div>
+            <div class="info-value">개인정보 및 민감정보 수집·이용 동의</div>
+            <div class="info-label">제출 ID</div>
+            <div class="info-value">#${submittedData.id}</div>
+            <div class="info-label">제출 시각</div>
+            <div class="info-value">${new Date(submittedData.submittedAt).toLocaleString('ko-KR', {
+                year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            })}</div>
+        </div>
+    </div>
+
+    <div class="signature">
+        <h3 style="margin-bottom: 15px; color: #2d3748;">전자 서명</h3>
+        <img src="${submittedData.signatureData}" alt="서명" />
+    </div>
+
+    <div class="evidence">
+        <p><strong>⚠️ 법적 증빙 정보</strong></p>
+        <p>증빙 코드 (변조 방지): <code>${submittedData.evidenceHash || 'N/A'}</code></p>
+        <p style="margin-top: 10px; font-size: 11px;">
+            ※ 이 증빙 코드는 동의 내용이 변조되지 않았음을 증명합니다.<br>
+            ※ 본 영수증은 법적 효력이 있으며, 분쟁 시 증거 자료로 활용됩니다.
+        </p>
+    </div>
+
+    <div class="footer">
+        <p><strong>수미헬스(SOOMi Health)</strong> | 서비스명: 케이슬립케어</p>
+        <p>사업자등록번호: 889-43-01165 | 대표자명·개인정보보호책임자: 김연재</p>
+        <p>주소: 서울특별시 영등포구 양평로 24, 5층 (Korea)</p>
+        <p>이메일: contact@ksleep.care | 전화: 010-9796-2513</p>
+        <p style="margin-top: 15px;">발급일시: ${new Date().toLocaleString('ko-KR')}</p>
+        <p>Copyright© 2025 수미헬스 All rights reserved</p>
+    </div>
+</body>
+</html>
+            `;
+
+            // HTML 파일로 다운로드
+            const blob = new Blob([receiptHTML], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `동의영수증_${submittedData.name}_${submittedData.id}.html`;
+            link.click();
+
+            alert('영수증이 다운로드되었습니다.\n\n브라우저에서 열어 인쇄하거나 PDF로 저장하세요.\n(파일 > 인쇄 > PDF로 저장)');
+        }
+
+        function openHospitalConfirmation() {
+            if (!submittedData) {
+                alert('제출 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // 병원용 확인서 페이지를 새 탭에서 열기
+            const url = 'hospital-confirmation.html';
+            window.open(url, '_blank');
+        }
+
+        // 전체 동의서 HTML 생성 함수 (DB 저장 및 나중에 다운로드 가능)
+        function generateFullConsentHTML(name, birthYear, guardianName, guardianPhone, guardianRelation, kakaoConsent, signatureData) {
+            const currentDate = new Date().toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const age = new Date().getFullYear() - parseInt(birthYear);
+            const isMinor = age < 14;
+
+            return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개인정보 수집·이용 동의서 - ${name}</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #ffffff;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 900px; margin: 0 auto; background: white; border: 2px solid #2d3748; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 4px solid #2d3748;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 12px; font-weight: 700; }
+        .header .subtitle { font-size: 16px; opacity: 0.95; font-weight: 500; }
+        .content { padding: 40px 30px; }
+        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            padding-left: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .section-content { font-size: 14px; color: #4a5568; line-height: 1.8; }
+        .section-content ul { margin: 10px 0; padding-left: 25px; }
+        .section-content li { margin: 8px 0; }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 12px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info-label { font-weight: 700; color: #495057; }
+        .info-value { color: #2d3748; font-weight: 500; }
+        .signature-box {
+            background: #f8f9fa;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .signature-box h3 { font-size: 16px; color: #2d3748; margin-bottom: 15px; font-weight: 700; }
+        .signature-image { max-width: 400px; border: 2px solid #cbd5e0; padding: 15px; background: white; border-radius: 8px; }
+        .consent-status {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .footer p { margin: 5px 0; line-height: 1.6; }
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #856404;
+        }
+        @media print {
+            body { padding: 0; }
+            .container { border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>개인정보 및 민감정보 수집·이용 동의서</h1>
+            <div class="subtitle">케이슬립케어 (수미헬스)</div>
+        </div>
+
+        <div class="content">
+            <div class="consent-status">
+                ✓ 동의 완료 (${currentDate})
+            </div>
+
+            <div class="section">
+                <div class="section-title">동의자 정보</div>
+                <div class="info-grid">
+                    <div class="info-label">성명</div>
+                    <div class="info-value">${name}</div>
+                    <div class="info-label">생년</div>
+                    <div class="info-value">${birthYear}년생</div>
+                    <div class="info-label">연령</div>
+                    <div class="info-value">${age}세</div>
+                    ${isMinor && guardianName ? `
+                    <div class="info-label">법정대리인</div>
+                    <div class="info-value">${guardianName} (${guardianRelation || '관계 미입력'})</div>
+                    <div class="info-label">대리인 연락처</div>
+                    <div class="info-value">${guardianPhone}</div>
+                    ` : ''}
+                    <div class="info-label">카카오톡 수신 동의</div>
+                    <div class="info-value">${kakaoConsent ? '동의함 ✓' : '동의하지 않음'}</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">1. 수집·이용 목적</div>
+                <div class="section-content">
+                    <strong>수면무호흡증 진단 및 치료 지원</strong>
+                    <ul>
+                        <li>PSG(수면다원검사) 결과 확인 및 해석 지원</li>
+                        <li>양압기 및 기타 치료 계획 수립 및 조정</li>
+                        <li>Mask fit 평가 및 마스크 선택·교체 지원</li>
+                        <li>양압기 titration 데이터 확인 및 최적 압력 조정 지원</li>
+                        <li>양압기 사용 현황 모니터링 및 순응도 관리</li>
+                    </ul>
+                    <strong>맞춤형 케어·교육 제공</strong>
+                    <ul>
+                        <li>검사·치료 데이터를 기반으로 한 맞춤형 설명·리포트 제공</li>
+                        <li>수면·수면무호흡증·치료·보험 관련 안내 및 Q&A 지원</li>
+                    </ul>
+                    <strong>서비스 품질관리 및 개선</strong>
+                    <ul>
+                        <li>치료 순응도 및 증상 개선 데이터 분석</li>
+                        <li>내부 통계·분석을 통한 프로그램·서비스 개선</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">2. 수집·이용 항목</div>
+                <div class="section-content">
+                    <strong>[1] 일반 개인정보</strong>
+                    <ul>
+                        <li>성명, 생년월일, 성별</li>
+                        <li>연락처(휴대전화 번호, 이메일)</li>
+                        <li>병원 고객번호 등 프로그램 운영에 필요한 식별 정보</li>
+                    </ul>
+                    <strong>[2] 건강 관련 민감정보</strong>
+                    <ul>
+                        <li>PSG(수면다원검사) 결과 전반</li>
+                        <li>양압기 및 관련 검사/설정 데이터</li>
+                        <li>실제 양압기 사용 데이터</li>
+                        <li>수면 관련 설문 및 기록</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">3. 보유·이용 기간</div>
+                <div class="section-content">
+                    <ul>
+                        <li>케이슬립케어 프로그램 참여 기간 동안 및 참여 종료 후 <strong>5년간</strong> 보관</li>
+                        <li>관련 법령에 따라 더 긴 기간 보존이 필요한 경우, 해당 법령에서 정한 기간 동안 보관·이용</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">4. 제3자 제공</div>
+                <div class="section-content">
+                    <strong>1) 진료 및 프로그램 운영을 위한 제공</strong>
+                    <ul>
+                        <li><strong>제공 대상:</strong> 고객이 검사·진료를 받은 수면클리닉 또는 병원, 치료기기 및 소모품 공급사(DME) 등</li>
+                        <li><strong>제공 목적:</strong> 진단·치료·검사 및 프로그램 운영, 장비 세팅·유지관리, 기술 지원 등</li>
+                        <li><strong>제공 항목:</strong> 업무 수행에 필요한 최소한의 범위</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">5. 정보주체의 권리</div>
+                <div class="section-content">
+                    <p>귀하는 언제든지 다음 사항에 대해 수미헬스에 요구할 수 있습니다:</p>
+                    <ul>
+                        <li>개인정보 및 민감정보 열람</li>
+                        <li>정정·삭제 요청</li>
+                        <li>처리 정지 요청</li>
+                    </ul>
+                    <p style="margin-top: 10px;">연락처: contact@ksleep.care / 010-9796-2513</p>
+                </div>
+            </div>
+
+            <div class="signature-box">
+                <h3>전자 서명</h3>
+                <img src="${signatureData}" alt="서명" class="signature-image" />
+                <p style="margin-top: 15px; font-size: 13px; color: #6c757d;">서명일: ${currentDate}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>수미헬스(SOOMi Health)</strong></p>
+            <p>서비스명: 케이슬립케어 | 사업자등록번호: 889-43-01165</p>
+            <p>대표자명·개인정보보호책임자: 김연재</p>
+            <p>주소: 서울특별시 영등포구 양평로 24, 5층 (Korea)</p>
+            <p>이메일: contact@ksleep.care | 전화: 010-9796-2513</p>
+            <p style="margin-top: 15px; font-size: 11px; opacity: 0.8;">
+                Copyright© 2025 수미헬스 All rights reserved
+            </p>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+    </script>
+</body>
+</html>
