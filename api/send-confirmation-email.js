@@ -227,7 +227,7 @@ export default async function handler(req, res) {
 
             <div class="signature-box">
                 <h3>전자 서명</h3>
-                ${signatureData ? `<img src="${signatureData}" alt="서명" class="signature-image" />` : '<p>서명 없음</p>'}
+                ${signatureData ? `<img src="${signatureData}" alt="서명" class="signature-image" style="max-width: 400px; width: 100%; height: auto; border: 2px solid #cbd5e0; padding: 15px; background: white; border-radius: 8px; display: block; margin: 0 auto;" />` : '<p>서명 없음</p>'}
                 <p style="margin-top: 15px; font-size: 13px; color: #6c757d;">서명일: ${currentDate}</p>
             </div>
         </div>
