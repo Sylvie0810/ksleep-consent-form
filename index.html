@@ -606,7 +606,10 @@
                     • 증빙 코드: <span id="receiptHash" style="font-family: monospace; font-size: 11px;"></span>
                 </p>
             </div>
-            <p style="font-size: 13px; color: #6c757d; margin-bottom: 15px;">
+            <p style="font-size: 13px; color: #48bb78; margin-bottom: 15px; font-weight: 600;">
+                ✅ 동의서가 자동으로 다운로드되었습니다!
+            </p>
+            <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">
                 ※ 제출이 완료되었습니다. 감사합니다.
             </p>
             <button class="btn-submit" onclick="closeModal()">확인</button>
@@ -784,6 +787,11 @@
                     document.getElementById('receiptHash').textContent = data.data.evidenceHash ? data.data.evidenceHash.substring(0, 32) + '...' : '';
 
                     document.getElementById('successModal').style.display = 'block';
+
+                    // 자동으로 동의서 다운로드
+                    setTimeout(() => {
+                        downloadReceipt();
+                    }, 500);
                 } else {
                     alert('제출 실패: ' + data.message);
                     submitBtn.disabled = false;
