@@ -378,6 +378,22 @@
 
         let allConsents = [];
 
+        // UTC 시간을 KST로 변환하는 함수
+        function convertToKST(utcDateString) {
+            const utcDate = new Date(utcDateString);
+            // UTC에 9시간 추가 (KST = UTC+9)
+            const kstDate = new Date(utcDate.getTime() + (9 * 60 * 60 * 1000));
+            return kstDate.toLocaleString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+        }
+
         // 페이지 로드 시 동의서 목록 불러오기
         window.addEventListener('load', function() {
             loadConsents();
@@ -438,7 +454,7 @@
                     <td>#${consent.id}</td>
                     <td><strong>${consent.patient_name || consent.name}</strong></td>
                     <td>${consent.patient_birth || consent.birth}년생</td>
-                    <td>${new Date(consent.created_at || consent.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</td>
+                    <td>${convertToKST(consent.created_at || consent.timestamp)}</td>
                     <td><span class="badge badge-success">${consent.consent_agreed ? '동의 완료' : '미동의'}</span></td>
                     <td>
                         <button class="btn-action btn-view" onclick="viewConsent(${consent.id})">👁️ 보기</button>
@@ -496,7 +512,7 @@
                             <h3>환자 정보</h3>
                             <p><strong>이름:</strong> ${data.patient_name || data.name}</p>
                             <p><strong>생년:</strong> ${data.patient_birth || data.birth}년</p>
-                            <p><strong>제출일시:</strong> ${new Date(data.created_at || data.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>
+                            <p><strong>제출일시:</strong> ${convertToKST(data.created_at || data.timestamp)}</p>
                             <p><strong>카카오톡 수신 동의:</strong> ${data.kakao_channel_agreed ? '동의함' : '동의하지 않음'}</p>
                             ${data.signature_data ? `<img src="${data.signature_data}" style="max-width: 400px; border: 2px solid #ddd; padding: 10px; margin-top: 20px;">` : ''}
                         </div>
@@ -546,15 +562,7 @@
             const guardianRelation = data.guardian_relation || '';
             const kakaoConsent = data.kakao_channel_agreed || false;
             const signatureData = data.signature_data;
-            const currentDate = new Date(data.created_at || data.timestamp).toLocaleString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZone: 'Asia/Seoul'
-            });
+            const currentDate = convertToKST(data.created_at || data.timestamp);
 
             const age = new Date().getFullYear() - parseInt(birthYear);
             const isMinor = age < 14;
