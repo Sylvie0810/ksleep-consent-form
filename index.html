@@ -607,10 +607,11 @@
                 </p>
             </div>
             <p style="font-size: 13px; color: #48bb78; margin-bottom: 15px; font-weight: 600;">
-                ✅ 동의서가 자동으로 다운로드되었습니다!
+                ✅ 제출이 완료되었습니다!
             </p>
             <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">
-                ※ 제출이 완료되었습니다. 감사합니다.
+                ※ 동의서 확인서가 이메일로 발송되었습니다.<br>
+                이메일을 확인해주세요. 감사합니다.
             </p>
             <button class="btn-submit" onclick="closeModal()">확인</button>
         </div>
@@ -865,16 +866,11 @@
 
                     document.getElementById('successModal').style.display = 'block';
 
-                    // 환자 레코드 업데이트 (토큰으로 접속한 경우)
+                    // 환자 레코드 업데이트 및 확인서 이메일 발송 (토큰으로 접속한 경우)
                     if (patientData) {
                         updatePatientRecord(patientData.id);
                         sendConfirmationEmail(patientData.email, name, birthYear, signatureData, kakaoConsent, guardianName, guardianPhone, guardianRelation);
                     }
-
-                    // 자동으로 동의서 다운로드
-                    setTimeout(() => {
-                        downloadReceipt();
-                    }, 500);
                 } else {
                     alert('제출 실패: ' + data.message);
                     submitBtn.disabled = false;
