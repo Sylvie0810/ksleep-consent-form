@@ -810,96 +810,25 @@
                 return;
             }
 
-            // HTML 영수증 생성
-            const receiptHTML = `
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>개인정보 수집·이용 동의서 제출 확인서</title>
-    <style>
-        body { font-family: "Malgun Gothic", sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-        .header { text-align: center; border-bottom: 3px solid #667eea; padding-bottom: 20px; margin-bottom: 30px; }
-        .header h1 { color: #667eea; font-size: 28px; margin-bottom: 10px; }
-        .header p { color: #6c757d; font-size: 14px; }
-        .section { margin: 25px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; }
-        .section h2 { font-size: 18px; color: #2d3748; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-        .info-grid { display: grid; grid-template-columns: 150px 1fr; gap: 12px; margin-top: 15px; }
-        .info-label { font-weight: bold; color: #495057; }
-        .info-value { color: #2d3748; }
-        .signature { text-align: center; margin: 20px 0; padding: 20px; background: white; border: 2px solid #e2e8f0; border-radius: 8px; }
-        .signature img { max-width: 400px; border: 1px solid #cbd5e0; padding: 10px; background: white; }
-        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; color: #6c757d; font-size: 12px; }
-        .evidence { background: #fff3cd; padding: 15px; border: 1px solid #ffc107; border-radius: 6px; margin: 20px 0; }
-        .evidence p { margin: 5px 0; font-size: 13px; color: #856404; }
-        .evidence code { font-family: monospace; background: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>개인정보 수집·이용 동의서 제출 확인서</h1>
-        <p>케이슬립케어 (수미헬스)</p>
-    </div>
-
-    <div class="section">
-        <h2>동의자 정보</h2>
-        <div class="info-grid">
-            <div class="info-label">성명</div>
-            <div class="info-value">${submittedData.name}</div>
-            <div class="info-label">생년</div>
-            <div class="info-value">${submittedData.birthYear}년</div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>동의 정보</h2>
-        <div class="info-grid">
-            <div class="info-label">동의 내용</div>
-            <div class="info-value">개인정보 및 민감정보 수집·이용 동의</div>
-            <div class="info-label">제출 ID</div>
-            <div class="info-value">#${submittedData.id}</div>
-            <div class="info-label">제출 시각</div>
-            <div class="info-value">${new Date(submittedData.submittedAt).toLocaleString('ko-KR', {
-                year: 'numeric', month: 'long', day: 'numeric',
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
-            })}</div>
-        </div>
-    </div>
-
-    <div class="signature">
-        <h3 style="margin-bottom: 15px; color: #2d3748;">전자 서명</h3>
-        <img src="${submittedData.signatureData}" alt="서명" />
-    </div>
-
-    <div class="evidence">
-        <p><strong>⚠️ 법적 증빙 정보</strong></p>
-        <p>증빙 코드 (변조 방지): <code>${submittedData.evidenceHash || 'N/A'}</code></p>
-        <p style="margin-top: 10px; font-size: 11px;">
-            ※ 이 증빙 코드는 동의 내용이 변조되지 않았음을 증명합니다.<br>
-            ※ 본 영수증은 법적 효력이 있으며, 분쟁 시 증거 자료로 활용됩니다.
-        </p>
-    </div>
-
-    <div class="footer">
-        <p><strong>수미헬스(SOOMi Health)</strong> | 서비스명: 케이슬립케어</p>
-        <p>사업자등록번호: 889-43-01165 | 대표자명·개인정보보호책임자: 김연재</p>
-        <p>주소: 서울특별시 영등포구 양평로 24, 5층 (Korea)</p>
-        <p>이메일: contact@ksleep.care | 전화: 010-9796-2513</p>
-        <p style="margin-top: 15px;">발급일시: ${new Date().toLocaleString('ko-KR')}</p>
-        <p>Copyright© 2025 수미헬스 All rights reserved</p>
-    </div>
-</body>
-</html>
-            `;
+            // 전체 동의서 HTML 생성 (generateFullConsentHTML 함수 재사용)
+            const fullConsentHTML = generateFullConsentHTML(
+                submittedData.name,
+                submittedData.birthYear,
+                submittedData.guardianName,
+                submittedData.guardianPhone,
+                submittedData.guardianRelation || '',
+                submittedData.kakaoConsent,
+                submittedData.signatureData
+            );
 
             // HTML 파일로 다운로드
-            const blob = new Blob([receiptHTML], { type: 'text/html;charset=utf-8' });
+            const blob = new Blob([fullConsentHTML], { type: 'text/html;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `동의영수증_${submittedData.name}_${submittedData.id}.html`;
+            link.download = `개인정보동의서_${submittedData.name}_${submittedData.id}.html`;
             link.click();
 
-            alert('영수증이 다운로드되었습니다.\n\n브라우저에서 열어 인쇄하거나 PDF로 저장하세요.\n(파일 > 인쇄 > PDF로 저장)');
+            alert('✅ 동의서가 다운로드되었습니다!\n\n브라우저에서 열어 인쇄하거나 PDF로 저장하세요.\n(파일 > 인쇄 > PDF로 저장)');
         }
 
         function openHospitalConfirmation() {
