@@ -94,7 +94,7 @@ export default async function handler(req, res) {
             margin: 20px 0;
         }
         .signature-box h3 { font-size: 16px; color: #2d3748; margin-bottom: 15px; font-weight: 700; }
-        .signature-image { max-width: 400px; border: 2px solid #cbd5e0; padding: 15px; background: white; border-radius: 8px; }
+        .signature-image { max-width: 400px; width: 100%; height: auto; border: 2px solid #cbd5e0; padding: 15px; background: white; border-radius: 8px; display: block; margin: 0 auto; }
         .consent-status {
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
