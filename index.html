@@ -871,6 +871,9 @@
                         updatePatientRecord(patientData.id);
                         sendConfirmationEmail(patientData.email, name, birthYear, signatureData, kakaoConsent, guardianName, guardianPhone, guardianRelation);
                     }
+
+                    // 관리자 알림 발송
+                    sendAdminNotification(name, birthYear, email, kakaoConsent);
                 } else {
                     alert('제출 실패: ' + data.message);
                     submitBtn.disabled = false;
@@ -1214,6 +1217,33 @@
                 }
             } catch (error) {
                 console.error('확인서 이메일 발송 오류:', error);
+            }
+        }
+
+        // 관리자에게 알림 이메일 발송
+        async function sendAdminNotification(patientName, patientBirth, patientEmail, kakaoConsent) {
+            try {
+                const emailResponse = await fetch('/api/send-admin-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patientName,
+                        patientBirth,
+                        patientEmail,
+                        kakaoConsent
+                    })
+                });
+
+                if (emailResponse.ok) {
+                    console.log('관리자 알림 발송 완료');
+                } else {
+                    const error = await emailResponse.text();
+                    console.error('관리자 알림 발송 실패:', error);
+                }
+            } catch (error) {
+                console.error('관리자 알림 발송 오류:', error);
             }
         }
     </script>
