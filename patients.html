@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환자 관리 - 케이슬립케어</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Pretendard", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9fa;
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f3f5;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            margin: 0 4px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-send {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-send:hover {
+            background: #5568d3;
+        }
+
+        .btn-edit {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #38a169;
+        }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c53030;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            max-width: 600px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group small {
+            color: #6c757d;
+            font-size: 12px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close:hover {
+            opacity: 0.8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>👥 환자 관리</h1>
+                <p>동의서 발송 및 환자 정보 관리 | 수미헬스</p>
+            </div>
+            <div class="nav-links">
+                <a href="admin.html" class="nav-link">📊 동의서 현황</a>
+                <a href="patients.html" class="nav-link">👥 환자 관리</a>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="환자 이름 또는 이메일로 검색...">
+            </div>
+            <button class="btn btn-primary" onclick="loadPatients()">🔄 새로고침</button>
+            <button class="btn btn-success" onclick="openAddPatientModal()">➕ 환자 추가</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>환자명</th>
+                        <th>생년</th>
+                        <th>이메일</th>
+                        <th>전화번호</th>
+                        <th>동의서 상태</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="patientsTable">
+                    <tr>
+                        <td colspan="7" class="loading">환자 목록을 불러오는 중</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 환자 추가/수정 모달 -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">환자 추가</h2>
+                <button class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="patientForm">
+                    <input type="hidden" id="patientId">
+
+                    <div class="form-group">
+                        <label for="name">환자명 *</label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthYear">생년 *</label>
+                        <input type="text" id="birthYear" placeholder="예: 1990" required>
+                        <small>4자리 연도로 입력하세요</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">이메일 *</label>
+                        <input type="email" id="email" required>
+                        <small>동의서 발송 및 확인서 수신에 사용됩니다</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">전화번호</label>
+                        <input type="tel" id="phone" placeholder="010-1234-5678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guardianName">법정대리인 이름</label>
+                        <input type="text" id="guardianName">
+                        <small>만 14세 미만인 경우 필수</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guardianPhone">법정대리인 전화번호</label>
+                        <input type="tel" id="guardianPhone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guardianRelation">법정대리인 관계</label>
+                        <input type="text" id="guardianRelation" placeholder="예: 부, 모">
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">저장</button>
+                        <button type="button" class="btn" style="background: #e2e8f0; color: #4a5568; flex: 1;" onclick="closeModal()">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase 설정
+        const SUPABASE_URL = 'https://clljgqrbqwexqhketdcu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsbGpncXJicXdleHFoa2V0ZGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1MjkwMTMsImV4cCI6MjA3OTEwNTAxM30.v6HHE5zjX38LrqzBkpHHTfs_qB1cFwnmJ-JRHxJCU8I';
+        const RESEND_API_KEY = 're_5idJkR12_Aqne8skEWQiYjTfVsnGavcJ5';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allPatients = [];
+
+        // 페이지 로드 시 환자 목록 불러오기
+        window.addEventListener('load', function() {
+            loadPatients();
+        });
+
+        // 검색 기능
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = allPatients.filter(patient =>
+                patient.name.toLowerCase().includes(searchTerm) ||
+                patient.email.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filtered);
+        });
+
+        // 환자 목록 불러오기
+        async function loadPatients() {
+            try {
+                const { data, error } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allPatients = data;
+                renderTable(data);
+            } catch (error) {
+                console.error('환자 불러오기 실패:', error);
+                document.getElementById('patientsTable').innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div>❌ 환자를 불러오는데 실패했습니다.</div>
+                            <div style="font-size: 12px; margin-top: 10px;">${error.message}</div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // 테이블 렌더링
+        function renderTable(patients) {
+            const tbody = document.getElementById('patientsTable');
+
+            if (patients.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div>📭 등록된 환자가 없습니다.</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = patients.map(patient => `
+                <tr>
+                    <td>#${patient.id}</td>
+                    <td><strong>${patient.name}</strong></td>
+                    <td>${patient.birth_year}년생</td>
+                    <td>${patient.email}</td>
+                    <td>${patient.phone || '-'}</td>
+                    <td>
+                        ${patient.consent_completed
+                            ? '<span class="badge badge-success">✓ 완료</span>'
+                            : patient.consent_sent_at
+                                ? '<span class="badge badge-warning">발송됨</span>'
+                                : '<span class="badge" style="background: #e2e8f0; color: #4a5568;">미발송</span>'}
+                    </td>
+                    <td>
+                        ${!patient.consent_completed
+                            ? `<button class="btn-action btn-send" onclick="sendConsentEmail(${patient.id})">📧 동의서 발송</button>`
+                            : ''}
+                        <button class="btn-action btn-edit" onclick="editPatient(${patient.id})">✏️ 수정</button>
+                        <button class="btn-action btn-delete" onclick="deletePatient(${patient.id}, '${patient.name}')">🗑️ 삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 환자 추가 모달 열기
+        function openAddPatientModal() {
+            document.getElementById('modalTitle').textContent = '환자 추가';
+            document.getElementById('patientForm').reset();
+            document.getElementById('patientId').value = '';
+            document.getElementById('patientModal').style.display = 'block';
+        }
+
+        // 환자 수정
+        async function editPatient(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+
+                document.getElementById('modalTitle').textContent = '환자 정보 수정';
+                document.getElementById('patientId').value = data.id;
+                document.getElementById('name').value = data.name;
+                document.getElementById('birthYear').value = data.birth_year;
+                document.getElementById('email').value = data.email;
+                document.getElementById('phone').value = data.phone || '';
+                document.getElementById('guardianName').value = data.guardian_name || '';
+                document.getElementById('guardianPhone').value = data.guardian_phone || '';
+                document.getElementById('guardianRelation').value = data.guardian_relation || '';
+
+                document.getElementById('patientModal').style.display = 'block';
+            } catch (error) {
+                console.error('환자 조회 실패:', error);
+                alert('환자 정보를 불러오는데 실패했습니다: ' + error.message);
+            }
+        }
+
+        // 환자 저장 (추가/수정)
+        document.getElementById('patientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const patientId = document.getElementById('patientId').value;
+            const patientData = {
+                name: document.getElementById('name').value,
+                birth_year: document.getElementById('birthYear').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value || null,
+                guardian_name: document.getElementById('guardianName').value || null,
+                guardian_phone: document.getElementById('guardianPhone').value || null,
+                guardian_relation: document.getElementById('guardianRelation').value || null
+            };
+
+            try {
+                if (patientId) {
+                    // 수정
+                    const { error } = await supabase
+                        .from('patients')
+                        .update(patientData)
+                        .eq('id', patientId);
+
+                    if (error) throw error;
+                    alert('✅ 환자 정보가 수정되었습니다.');
+                } else {
+                    // 추가
+                    const { error } = await supabase
+                        .from('patients')
+                        .insert([patientData]);
+
+                    if (error) throw error;
+                    alert('✅ 환자가 추가되었습니다.');
+                }
+
+                closeModal();
+                loadPatients();
+            } catch (error) {
+                console.error('저장 실패:', error);
+                alert('저장에 실패했습니다: ' + error.message);
+            }
+        });
+
+        // 환자 삭제
+        async function deletePatient(id, name) {
+            if (!confirm(`정말로 "${name}" 환자를 삭제하시겠습니까?\n\n⚠️ 이 작업은 되돌릴 수 없습니다.`)) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('patients')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert(`✅ "${name}" 환자가 삭제되었습니다.`);
+                loadPatients();
+            } catch (error) {
+                console.error('삭제 실패:', error);
+                alert('삭제에 실패했습니다: ' + error.message);
+            }
+        }
+
+        // 동의서 이메일 발송
+        async function sendConsentEmail(patientId) {
+            try {
+                // 환자 정보 가져오기
+                const { data: patient, error: fetchError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('id', patientId)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                // 고유 토큰 생성
+                const token = generateToken();
+
+                // 토큰 저장
+                const { error: updateError } = await supabase
+                    .from('patients')
+                    .update({
+                        consent_token: token,
+                        consent_sent_at: new Date().toISOString()
+                    })
+                    .eq('id', patientId);
+
+                if (updateError) throw updateError;
+
+                // 개인화된 링크 생성
+                const consentLink = `https://ksleep-consent-form.vercel.app/index.html?token=${token}`;
+
+                // 이메일 발송
+                const emailResponse = await fetch('https://api.resend.com/emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${RESEND_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        from: 'K-Sleep Care <onboarding@resend.dev>',
+                        to: [patient.email],
+                        subject: `[케이슬립케어] ${patient.name}님, 개인정보 이용동의서 작성을 부탁드립니다`,
+                        html: `
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <meta charset="UTF-8">
+                                <style>
+                                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif; line-height: 1.6; color: #333; }
+                                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center; border-radius: 8px; }
+                                    .content { background: #f8f9fa; padding: 30px; margin: 20px 0; border-radius: 8px; }
+                                    .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white !important; padding: 15px 40px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; font-size: 16px; }
+                                    .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+                                    .footer { text-align: center; color: #6c757d; font-size: 12px; margin-top: 30px; }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <div class="header">
+                                        <h1>개인정보 이용동의서</h1>
+                                        <p>케이슬립케어 (수미헬스)</p>
+                                    </div>
+
+                                    <div class="content">
+                                        <h2 style="color: #2d3748; margin-bottom: 15px;">안녕하세요, ${patient.name}님</h2>
+                                        <p style="font-size: 15px; line-height: 1.8;">
+                                            케이슬립케어 프로그램 참여를 위한 <strong>개인정보 및 민감정보 수집·이용 동의서</strong> 작성을 부탁드립니다.
+                                        </p>
+
+                                        <div class="info-box">
+                                            <p style="margin-bottom: 10px;">📝 <strong>작성 방법</strong></p>
+                                            <ol style="margin-left: 20px; color: #4a5568;">
+                                                <li>아래 버튼을 클릭하여 동의서 페이지로 이동합니다</li>
+                                                <li>이미 입력된 정보를 확인합니다 (${patient.name}, ${patient.birth_year}년생)</li>
+                                                <li>동의 내용을 검토한 후 서명을 작성합니다</li>
+                                                <li>제출 버튼을 누르면 완료됩니다</li>
+                                            </ol>
+                                        </div>
+
+                                        <div style="text-align: center; margin: 30px 0;">
+                                            <a href="${consentLink}" class="button">
+                                                동의서 작성하러 가기 →
+                                            </a>
+                                        </div>
+
+                                        <p style="font-size: 13px; color: #6c757d; margin-top: 20px;">
+                                            ⏱️ 소요 시간: 약 2-3분<br>
+                                            📱 모바일에서도 작성 가능합니다
+                                        </p>
+                                    </div>
+
+                                    <div class="footer">
+                                        <p><strong>수미헬스 (SOOMi Health)</strong></p>
+                                        <p>케이슬립케어 | contact@ksleep.care | 010-9796-2513</p>
+                                        <p style="margin-top: 15px; opacity: 0.7;">
+                                            본 이메일은 케이슬립케어 프로그램 참여를 위해 발송되었습니다.<br>
+                                            문의사항이 있으시면 위 연락처로 연락 주시기 바랍니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </body>
+                            </html>
+                        `
+                    })
+                });
+
+                if (!emailResponse.ok) {
+                    const error = await emailResponse.text();
+                    throw new Error(`이메일 발송 실패: ${error}`);
+                }
+
+                alert(`✅ ${patient.name}님에게 동의서가 발송되었습니다!\n\n이메일: ${patient.email}`);
+                loadPatients();
+
+            } catch (error) {
+                console.error('동의서 발송 실패:', error);
+                alert('동의서 발송에 실패했습니다: ' + error.message);
+            }
+        }
+
+        // 토큰 생성 함수
+        function generateToken() {
+            return 'consent_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('patientModal').style.display = 'none';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('patientModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
