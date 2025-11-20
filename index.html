@@ -682,17 +682,20 @@
                             guardianSection.classList.add('active');
                         }
 
-                        // 안내 메시지 표시
+                        // 안내 메시지 표시 (기존 내용 위에 추가)
                         const intro = document.querySelector('.intro');
-                        intro.innerHTML = `
-                            <p style="color: #48bb78; font-weight: 600; margin-bottom: 10px;">
+                        const welcomeMsg = document.createElement('div');
+                        welcomeMsg.style.cssText = 'background: #e6ffed; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #48bb78;';
+                        welcomeMsg.innerHTML = `
+                            <p style="color: #48bb78; font-weight: 600; margin-bottom: 8px;">
                                 ✅ ${data.name}님의 동의서입니다
                             </p>
-                            <p style="font-size: 13px;">
+                            <p style="font-size: 13px; color: #2d3748;">
                                 아래 내용을 검토하신 후 서명하여 제출해 주세요.<br>
                                 이름과 생년월일은 자동으로 입력되었습니다.
                             </p>
                         `;
+                        intro.insertBefore(welcomeMsg, intro.firstChild);
                     }
                 } catch (error) {
                     console.error('환자 정보 조회 실패:', error);
