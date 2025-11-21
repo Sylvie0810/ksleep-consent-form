@@ -1,4 +1,6 @@
-// Vercel Serverless Function - 동의서 이메일 발송
+// Vercel Serverless Function - 동의서 이메일 발송 (Gmail SMTP)
+
+import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
   // CORS 헤더 설정
@@ -18,19 +20,16 @@ export default async function handler(req, res) {
   try {
     const { email, name, birthYear, consentLink } = req.body;
 
-    const RESEND_API_KEY = 're_5idJkR12_Aqne8skEWQiYjTfVsnGavcJ5';
+    // Gmail SMTP 설정
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'urmypride@gmail.com',
+        pass: 'kocd rsot jwhu zehb'
+      }
+    });
 
-    const emailResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`
-      },
-      body: JSON.stringify({
-        from: 'K-Sleep Care <onboarding@resend.dev>',
-        to: [email],
-        subject: `[케이슬립케어] ${name}님, 개인정보 이용동의서 작성을 부탁드립니다`,
-        html: `
+    const emailHTML = `
           <!DOCTYPE html>
           <html>
           <head>
@@ -92,23 +91,23 @@ export default async function handler(req, res) {
           </body>
           </html>
         `
-      })
+    `;
+
+    // 이메일 발송
+    const info = await transporter.sendMail({
+      from: '"케이슬립케어 (K-Sleep Care)" <urmypride@gmail.com>',
+      to: email,
+      subject: `[케이슬립케어] ${name}님, 개인정보 이용동의서 작성을 부탁드립니다`,
+      html: emailHTML
     });
-
-    if (!emailResponse.ok) {
-      const error = await emailResponse.text();
-      throw new Error(`Resend API error: ${error}`);
-    }
-
-    const result = await emailResponse.json();
 
     return res.status(200).json({
       success: true,
-      emailId: result.id
+      messageId: info.messageId
     });
 
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('Gmail SMTP error:', error);
     return res.status(500).json({
       success: false,
       error: error.message
