@@ -2,7 +2,6 @@
   "name": "ksleep-consent-form",
   "version": "1.0.0",
   "description": "K-Sleep Care consent form system",
-  "type": "module",
   "dependencies": {
     "nodemailer": "^6.9.7"
   }
